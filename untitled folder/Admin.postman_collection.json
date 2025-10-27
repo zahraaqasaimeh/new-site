@@ -1,0 +1,163 @@
+{
+	"info": {
+		"_postman_id": "81c57832-eaaa-419b-8d90-513c94b5a500",
+		"name": "Admin",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "30792687"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Postman Test Script\r",
+									"// This script performs a comprehensive validation of the JSON response.\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    // Verifies that the HTTP response status code is 200 (OK).\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body is a valid JSON\", function () {\r",
+									"    // Ensures the response body can be parsed as JSON.\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"// Parse the JSON response body to use in subsequent tests.\r",
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"// Define the JSON Schema for robust validation.\r",
+									"// This schema enforces types, required fields, and specific values for all properties.\r",
+									"// \"additionalProperties\": false ensures no extra fields are present in the response.\r",
+									"const schema = {\r",
+									"    \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"    \"type\": \"object\",\r",
+									"    \"properties\": {\r",
+									"        \"username\": {\r",
+									"            \"type\": \"string\",\r",
+									"            \"description\": \"The username of the entity.\",\r",
+									"            \"enum\": [\"emilys\"] // Strict check for the exact value\r",
+									"        },\r",
+									"        \"password\": {\r",
+									"            \"type\": \"string\",\r",
+									"            \"description\": \"The password of the entity.\",\r",
+									"            \"enum\": [\"emilyspass\"] // Strict check for the exact value\r",
+									"        }\r",
+									"    },\r",
+									"    \"required\": [\r",
+									"        \"username\",\r",
+									"        \"password\"\r",
+									"    ],\r",
+									"    \"additionalProperties\": false\r",
+									"};\r",
+									"\r",
+									"pm.test(\"Response body conforms to the JSON Schema\", function () {\r",
+									"    // Validate the response body against the defined schema using the tv4 library.\r",
+									"    const validationResult = tv4.validate(jsonData, schema);\r",
+									"    if (!validationResult) {\r",
+									"        console.error(\"Schema validation failed!\");\r",
+									"        console.error(\"Error: \", tv4.error.message);\r",
+									"        console.error(\"Data path: \", tv4.error.dataPath);\r",
+									"    }\r",
+									"    pm.expect(validationResult, \"Schema validation should pass\").to.be.true;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response body has the correct structure and strict values\", function () {\r",
+									"    // Define the exact expected object for a deep equality check.\r",
+									"    // This serves as an alternative, explicit check for all values and types.\r",
+									"    const expectedBody = {\r",
+									"        \"username\": \"emilys\",\r",
+									"        \"password\": \"emilyspass\"\r",
+									"    };\r",
+									"    pm.expect(jsonData).to.deep.equal(expectedBody);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Conditionally save 'id' to an environment variable\", function () {\r",
+									"    // Check if a top-level 'id' field exists in the response.\r",
+									"    // This makes the script reusable and prevents errors if the 'id' is not present.\r",
+									"    if (jsonData.hasOwnProperty('id')) {\r",
+									"        // If 'id' exists, save its value to an environment variable.\r",
+									"        pm.environment.set(\"generated_entity_id\", jsonData.id);\r",
+									"        console.log(\"Saved entity ID to environment variable: \" + jsonData.id);\r",
+									"    } else {\r",
+									"        // Log a message if the 'id' field is not found.\r",
+									"        console.log(\"'id' field not found in the response. Skipping variable set.\");\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJlbWlseXMiLCJlbWFpbCI6ImVtaWx5LmpvaG5zb25AeC5kdW1teWpzb24uY29tIiwiZmlyc3ROYW1lIjoiRW1pbHkiLCJsYXN0TmFtZSI6IkpvaG5zb24iLCJnZW5kZXIiOiJmZW1hbGUiLCJpbWFnZSI6Imh0dHBzOi8vZHVtbXlqc29uLmNvbS9pY29uL2VtaWx5cy8xMjgiLCJpYXQiOjE3NjEzMDY3MzUsImV4cCI6MTc2MTMwNzMzNX0.eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJlbWlseXMiLCJlbWFpbCI6ImVtaWx5LmpvaG5zb25AeC5kdW1teWpzb24uY29tIiwiZmlyc3ROYW1lIjoiRW1pbHkiLCJsYXN0TmFtZSI6IkpvaG5zb24iLCJnZW5kZXIiOiJmZW1hbGUiLCJpbWFnZSI6Imh0dHBzOi8vZHVtbXlqc29uLmNvbS9pY29uL2VtaWx5cy8xMjgiLCJpYXQiOjE3NjEzMDc1NjUsImV4cCI6MTc2MTMwODE2NX0.o1Qog9i5lZ9EtAAEBQNG0sUYlKu7oTR--PCRzCHHDVY"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"emilys\",\r\n    \"password\": \"emilyspass\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://dummyjson.com/auth/login"
+					},
+					"response": []
+				},
+				{
+					"name": "user details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{jwt}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "https://dummyjson.com/auth/me"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "height",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "weight",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
